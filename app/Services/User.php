@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Services;
 
-use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class User
 {
-    protected $fillable = ['name', 'date_of_birth', 'gender'];
+    public $name;
+    public $date_of_birth;
+    public $gender;
 
     public function updateUser(string $name, int $age, string $gender): void {
         // Update user logic here
