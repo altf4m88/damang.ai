@@ -10,7 +10,6 @@ class MedicalRecord
     public $weight;
     public $height;
 
-
     public function updateMedicalRecord(string $medicalCondition, string $allergies, float $weight, float $height): void {
         // Update medical record logic here
     }
