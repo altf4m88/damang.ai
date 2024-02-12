@@ -1,5 +1,8 @@
 <?php
 
+use App\Services\Chatbot;
+use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,3 +17,20 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', ['App\Http\Controllers\ProfileController', 'index'])->name('profile');
+
+Route::get('/testchat', function (HttpRequest $request) {
+
+    $chat = $request->chat;
+
+    $chatbot = new Chatbot;
+
+    $messages = [
+        [
+        'role' => 'user',
+        'content' => $chat
+        ],
+    ];
+
+    dd($chatbot->sendRequest($messages));
+    return view('welcome');
+});
