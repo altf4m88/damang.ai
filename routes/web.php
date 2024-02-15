@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Services\Chatbot;
 use Illuminate\Http\Client\Request;
 use Illuminate\Http\Request as HttpRequest;
@@ -30,7 +31,7 @@ Route::get('/testchat', function (HttpRequest $request) {
 
     $chat = $request->chat;
 
-    $chatbot = new Chatbot;
+    $chatbot = new Chatbot();
 
     $messages = [
         [
@@ -47,11 +48,29 @@ Route::get('/chat', function () {
     return view('chat');
 });
 
+Route::controller(ChatController::class)->group(function () {
+    Route::prefix('users/{id}')
+        ->group(function () {
+        Route::prefix('chats/')
+            ->group(function () {
+                Route::get('/', 'index');
+                Route::get('/create', 'index');
+                Route::post('/', 'store');
+                Route::get('/{chat_id}', 'show');
+                Route::put('/{chat_id}', 'update');
+                Route::delete('/{chat_id}', 'destroy');
+            });
+        });
+});
+
 Route::controller(UserController::class)->group(function () {
-    Route::get('/users', 'index');
-    Route::get('/users/create', 'create'); 
-    Route::get('/users/{id}', 'show');
-    Route::put('/users/{id}', 'update');
-    Route::delete('/users/{id}', 'destroy');
-    Route::post('/users', 'store');
+    Route::prefix('users')
+        ->group(function () {
+            Route::get('/', 'index');
+            Route::get('/create', 'create'); 
+            Route::get('/{id}', 'show');
+            Route::put('/{id}', 'update');
+            Route::delete('/{id}', 'destroy');
+            Route::post('/', 'store');
+        });
 });
