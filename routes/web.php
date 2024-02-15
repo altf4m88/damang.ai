@@ -17,9 +17,10 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::get('/', function () {
-    return redirect('/users');
-});
+// Route::get('/', function () {
+//     return redirect('/users');
+// });
+Route::get('/', ['App\Http\Controllers\ProfileController', 'index'])->name('profile');
 
 Route::get('/testchat', function (HttpRequest $request) {
 
