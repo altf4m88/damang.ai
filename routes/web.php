@@ -21,6 +21,7 @@ use App\Http\Controllers\UserController;
 //     return redirect('/users');
 // });
 Route::get('/', ['App\Http\Controllers\ProfileController', 'index'])->name('profile');
+Route::get('/create-profile', ['App\Http\Controllers\ProfileController', 'create'])->name('create-profile');
 
 Route::get('/testchat', function (HttpRequest $request) {
 
