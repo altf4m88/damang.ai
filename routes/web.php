@@ -21,7 +21,10 @@ use App\Http\Controllers\UserController;
 //     return redirect('/users');
 // });
 Route::get('/', ['App\Http\Controllers\ProfileController', 'index'])->name('profile');
-Route::get('/create-profile', ['App\Http\Controllers\ProfileController', 'create'])->name('create-profile');
+Route::get('/create-profile', ['App\Http\Controllers\ProfileController', 'create'])->name('get-create-profile');
+Route::post('/create-profile', ['App\Http\Controllers\ProfileController', 'store'])->name('post-create-profile');
+Route::get('/create-medical-record/{id}', ['App\Http\Controllers\ProfileController', 'createMedicalRecord'])->name('get-create-medical-record');
+Route::post('/create-medical-record/{id}', ['App\Http\Controllers\ProfileController', 'createPostMedicalRecord'])->name('post-create-medical-record');
 
 Route::get('/testchat', function (HttpRequest $request) {
 
