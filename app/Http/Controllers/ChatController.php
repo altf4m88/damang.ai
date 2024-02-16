@@ -9,7 +9,7 @@ class ChatController extends Controller
 {
     public function index($id)
     {
-        return view('chat.index-chat', ['user_id' => $id]);
+        return view('chat.default-chat');
     }
 
     public function store(Request $request)
