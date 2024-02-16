@@ -11,17 +11,21 @@ class ChatController extends Controller
 {
     public function index($id)
     {
-        return view('chat.default-chat');
+        $consultations = Consultation::all();
+
+        return view('chat.default-chat', compact('id', 'consultations'));
     }
     
     public function detail($id, $chat_id)
     {
         $chatbot = new Chatbot($id);
+        $consultations = Consultation::all();
     
         $initialMessage = $chatbot->initialMessage;
          return view('chat.index-chat', [
             'user_id' => $id,
             'initialMessage' => $initialMessage,
+            'consultations' =>  $consultations
         ]);
 
     }
@@ -34,7 +38,12 @@ class ChatController extends Controller
         $consultation->user_id = $id;
         $consultation->chat_history = $chatbot->initialMessage;
         $consultation->start_time =  Carbon::now();
-        
+        $consultation->save();
+
+        return redirect()->route('detail.chat', [
+            'id' => $id,
+            'chat_id' => $consultation->id
+        ]);
     }
 
     public function store(Request $request, $userId)

@@ -31,8 +31,8 @@ Route::controller(ChatController::class)->group(function () {
         Route::prefix('chats/')
             ->group(function () {
                 Route::get('/', 'index')->name('index.chat');
-                Route::post('/create', 'storeConsultation');
-                Route::get('/{chat_id}', 'detail');
+                Route::post('/create', 'storeConsultation')->name('store.consultation.chat');
+                Route::get('/{chat_id}', 'detail')->name('detail.chat');
             });
         });
 });
