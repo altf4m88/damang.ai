@@ -32,6 +32,7 @@ Route::controller(ChatController::class)->group(function () {
             ->group(function () {
                 Route::get('/', 'index')->name('index.chat');
                 Route::post('/create', 'storeConsultation')->name('store.consultation.chat');
+                Route::post('/{chat_id}', 'store');
                 Route::get('/{chat_id}', 'detail')->name('detail.chat');
             });
         });
