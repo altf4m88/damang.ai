@@ -10,18 +10,31 @@
         </div>
 
         <div class="flex flex-col mt-8">
+          <form action="{{ route('store.consultation.chat', $user_id) }}" method="POST" class="flex justify-center">
+            @csrf
             <button
-            class="bg-primary rounded-xl p-2 hover:bg-darker text-sm font-semibold text-white"
+            class="bg-primary rounded-xl p-2 hover:bg-darker text-sm font-semibold text-white w-full"
+            type="submit"
           >
             Tambah Konsultasi
           </button>
+          </form>
           <div class="flex flex-col space-y-1 mt-4 -mx-2 h-100 overflow-y-auto">
-           
+            @foreach ($consultations as $consultation)
             <button
-              class="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
+            @class([
+              'flex',
+              'flex-row',
+              'items-center',
+              'hover:bg-gray-100',
+              'rounded-xl',
+              'p-2',
+              'bg-gray-200' => $consultation->id == $chat_id
+            ])
             >
-              <div class="ml-2 text-sm font-semibold">Henry Boyd</div>
+              <div class="ml-2 text-sm font-semibold">{{ $consultation['chat_history'][2]['content'] ?? 'New Chat'  }}</div>
             </button>
+            @endforeach
           </div>
         </div>
       </div>
