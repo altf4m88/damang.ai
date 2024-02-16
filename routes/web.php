@@ -25,20 +25,14 @@ Route::post('/create-profile', ['App\Http\Controllers\ProfileController', 'store
 Route::get('/create-medical-record/{id}', ['App\Http\Controllers\ProfileController', 'createMedicalRecord'])->name('get-create-medical-record');
 Route::post('/create-medical-record/{id}', ['App\Http\Controllers\ProfileController', 'createPostMedicalRecord'])->name('post-create-medical-record');
 
-//chats
-// Route::get('/chat/{id}', ['App\Http\Controllers\ChatController', 'index'])->name('index.chat');
-
 Route::controller(ChatController::class)->group(function () {
     Route::prefix('users/{id}')
         ->group(function () {
         Route::prefix('chats/')
             ->group(function () {
-                Route::get('/', 'index');
-                Route::get('/create', 'index');
-                Route::post('/', 'store');
-                Route::get('/{chat_id}', 'show');
-                Route::put('/{chat_id}', 'update');
-                Route::delete('/{chat_id}', 'destroy');
+                Route::get('/', 'index')->name('index.chat');
+                Route::post('/create', 'storeConsultation');
+                Route::get('/{chat_id}', 'detail');
             });
         });
 });
