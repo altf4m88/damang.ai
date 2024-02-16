@@ -9,6 +9,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
@@ -27,8 +28,11 @@
               }
             }
           </script>
+    @yield('script')
+
     </head>
     <body>
         @yield('content')
     </body>
+    
 </html>
