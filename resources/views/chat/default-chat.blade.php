@@ -20,12 +20,12 @@
           </button>
           </form>
           <div class="flex flex-col space-y-1 mt-4 -mx-2 h-100 overflow-y-auto">
-            @foreach ($consultations as $consultation)
-            <button
+            @foreach ($consultations as $item)
+            <a href="{{ route('detail.chat', ['id' => $id, 'chat_id' => $item->id]) }}"
               class="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
             >
-              <div class="ml-2 text-sm font-semibold">{{ $consultation['chat_history'][2]['content'] ?? 'New Chat'  }}</div>
-            </button>
+              <div class="ml-2 text-sm font-semibold truncate w-[235px]">{{ $item['chat_history'][2]['content'] ?? 'New Chat'  }}</div>
+            </a>
             @endforeach
           </div>
         </div>
