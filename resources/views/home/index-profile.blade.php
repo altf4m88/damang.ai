@@ -11,7 +11,7 @@
         </p>
         <div class="flex justify-center flex-wrap mt-6 gap-4">
             @foreach ($users as $user)
-                <a href="{{ route('index.chat', $user->id) }}" class="p-4 hover:bg-gray-300 cursor-pointer">
+                <a href="{{ URL::to("/users/$user->id/chats") }}" class="p-4 hover:bg-gray-300 cursor-pointer">
                     <img src="{{ asset('images/default.webp') }}" alt="Avatar" class="w-20 h-20 rounded-full">
                     <p class="text-base text-gray-800 font-semibold mt-1">{{ $user->name }}</p>
                 </a>
