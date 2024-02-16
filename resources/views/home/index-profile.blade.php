@@ -17,7 +17,7 @@
                 </div>
             @endforeach
             
-           <a href="{{ route('create-profile') }}" class="p-4 hover:bg-gray-300 cursor-pointer">
+           <a href="{{ route('get-create-profile') }}" class="p-4 hover:bg-gray-300 cursor-pointer">
                 <div class="bg-primary w-20 h-20 rounded-full text-3xl flex justify-center items-center text-white" href="#">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                 </div>
