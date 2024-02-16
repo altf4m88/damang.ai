@@ -59,5 +59,5 @@ class ProfileController extends Controller
         // dd($payload);
 
         return redirect()->route('profile');
-    }
+    }   
 }
