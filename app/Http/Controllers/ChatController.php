@@ -20,12 +20,13 @@ class ChatController extends Controller
     {
         $chatbot = new Chatbot($id);
         $consultations = Consultation::all();
-    
-        $initialMessage = $chatbot->initialMessage;
+        $consultation = Consultation::find($chat_id);
+
          return view('chat.index-chat', [
             'user_id' => $id,
-            'initialMessage' => $initialMessage,
-            'consultations' =>  $consultations
+            'chat_id' => $chat_id,
+            'consultations' =>  $consultations,
+            'consultation' => $consultation,
         ]);
 
     }
@@ -46,15 +47,19 @@ class ChatController extends Controller
         ]);
     }
 
-    public function store(Request $request, $userId)
+    public function store(Request $request, $userId, $chatId)
     {
         $chat = $request->message;
 
         $chatbot = new Chatbot($userId);
+        $consultation = Consultation::find($chatId);
 
         $messages = [
-            'role' => 'user',
-            'content' => $chat,
+            ...$consultation->chat_history,
+            [
+                'role' => 'user',
+                'content' => $chat,
+            ]
         ];
 
         $response = $chatbot->sendRequest($messages);
@@ -66,7 +71,8 @@ class ChatController extends Controller
             ]
         ];
 
-        // update the consultation item
+        $consultation->chat_history = $updateConsultation;
+        $consultation->save();
 
         return response()->json([
             'history' => $updateConsultation,
