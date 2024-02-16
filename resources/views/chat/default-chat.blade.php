@@ -10,18 +10,23 @@
         </div>
 
         <div class="flex flex-col mt-8">
+          <form action="{{ route('store.consultation.chat', $id) }}" method="POST" class="flex justify-center">
+            @csrf
             <button
-            class="bg-primary rounded-xl p-2 hover:bg-darker text-sm font-semibold text-white"
+            class="bg-primary rounded-xl p-2 hover:bg-darker text-sm font-semibold text-white w-full"
+            type="submit"
           >
             Tambah Konsultasi
           </button>
+          </form>
           <div class="flex flex-col space-y-1 mt-4 -mx-2 h-100 overflow-y-auto">
-           
-            {{-- <button
+            @foreach ($consultations as $consultation)
+            <button
               class="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
             >
-              <div class="ml-2 text-sm font-semibold">Henry Boyd</div>
-            </button> --}}
+              <div class="ml-2 text-sm font-semibold">{{ $consultation['chat_history'][2]['content'] ?? 'New Chat'  }}</div>
+            </button>
+            @endforeach
           </div>
         </div>
       </div>
@@ -35,7 +40,9 @@
             @csrf
             <button
               class="bg-primary rounded-xl py-2 px-4 hover:bg-darker text-sm font-semibold text-white"
+              type="submit"
             >
+            
               Konsultasi Sekarang
             </button>
           </form>
