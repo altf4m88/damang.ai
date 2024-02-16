@@ -60,10 +60,7 @@ class Chatbot
 
     public function sendRequest($message)
     {
-        $messagePayload = [
-            ...$this->initialMessage,
-            $message,
-        ];
+        $messagePayload = $message;
         
         $response = $this->client->chat()->create([
             ...$this->config,

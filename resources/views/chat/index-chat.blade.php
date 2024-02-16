@@ -32,15 +32,30 @@
           <div class="flex flex-col h-full overflow-x-auto mb-4">
             <div class="flex flex-col h-full">
               <div id="chat-field" class="grid grid-cols-12 gap-y-2">
-                <div class="col-start-1 col-end-8 p-3 rounded-lg">
-                  <div class="flex flex-row items-center">
-                    <div
-                      class="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
-                    >
-                      <div class="bot-message">{{$initialMessage[1]['content']}}</div>
+
+                @foreach ($consultation['chat_history'] as $chat) 
+                  @if ($chat['role'] == 'assistant')
+                  <div class="col-start-1 col-end-8 p-3 rounded-lg">
+                    <div class="flex flex-row items-center">
+                      <div
+                        class="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
+                      >
+                        <div class="bot-message">{{$chat['content']}}</div>
+                      </div>
                     </div>
                   </div>
-                </div>
+
+                  @elseif($chat['role'] == 'user')
+
+                  <div class=" col-start-6 col-end-13 p-3 rounded-lg">
+                    <div class="flex items-center justify-start flex-row-reverse">
+                        <div class="relative mr-3 text-sm bg-background py-2 px-4 shadow rounded-xl text-white">
+                            <div class="user-message">{{$chat['content']}}</div>
+                        </div>
+                      </div>
+                  </div>
+                  @endif
+                @endforeach
               </div>
             </div>
           </div>
@@ -95,14 +110,44 @@
       function sendChatMessage(message) {
 
           $.ajax({
-              url: '/users/8/chats',
+              url: "/users/{{$user_id}}/chats/{{$chat_id}}",
               type: 'POST',
               data: {
                   message: message,
                   _token: '{{ csrf_token() }}'
               },
+              beforeSend: function() {
+                        
+                $('#chat-field').append(
+                  `<div class=" col-start-6 col-end-13 p-3 rounded-lg">
+                        <div class="flex items-center justify-start flex-row-reverse">
+                            <div class="relative mr-3 text-sm bg-background py-2 px-4 shadow rounded-xl text-white">
+                                <div class="user-message">${message}</div>
+                            </div>
+                        </div>
+                    </div>`
+                );
+
+                $('#chat-field').append(
+                  `
+                    <div class="loading col-start-1 col-end-8 p-3 rounded-lg">
+                          <div class="flex flex-row items-center">
+                            <div
+                              class="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
+                            >
+                              <div class="bot-message dot-loader"">
+                                <div class="dot"></div>
+                                  <div class="dot"></div>
+                                  <div class="dot"></div>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                    `
+                );
+                $('#chatInput').val('');
+              },
               success: function(response) {
-    
                 $('.loading').remove();
                 $('#chat-field').append(
                   `<div class="col-start-1 col-end-8 p-3 rounded-lg">
@@ -123,46 +168,18 @@
           });
       }
 
-    // Function to display messages
-    function displayMessages(messages, className) {
-        // messages.forEach(function(message) {
-        //     var messageElement = $('<div></div>').addClass(className).text(message);
-        //     $('#messageContainer').append(messageElement); // Assuming there's a container for messages
-        // });
-    }
-
     // Event handler for sending a message (e.g., when a button is clicked)
     $('#sendButton').on('click', function() {
         var message = $('#chatInput').val(); 
-
-        $('#chat-field').append(
-          `<div class=" col-start-6 col-end-13 p-3 rounded-lg">
-                <div class="flex items-center justify-start flex-row-reverse">
-                    <div class="relative mr-3 text-sm bg-background py-2 px-4 shadow rounded-xl text-white">
-                        <div class="user-message">${message}</div>
-                    </div>
-                </div>
-            </div>`
-        );
-
-        $('#chat-field').append(
-          `
-            <div class="loading col-start-1 col-end-8 p-3 rounded-lg">
-                  <div class="flex flex-row items-center">
-                    <div
-                      class="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
-                    >
-                      <div class="bot-message dot-loader"">
-                        <div class="dot"></div>
-                          <div class="dot"></div>
-                          <div class="dot"></div>
-                        </div>
-                    </div>
-                  </div>
-                </div>
-            `
-        );
         sendChatMessage(message);
+    });
+
+    $('#chatInput').keypress(function(e) {
+        if(e.which == 13) {
+            var message = $('#chatInput').val(); 
+            e.preventDefault();
+            sendChatMessage(message);
+        }
     });
 });
   </script>
