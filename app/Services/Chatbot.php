@@ -35,7 +35,7 @@ class Chatbot
     {
         $user = User::findOrFail($userId);
         $medicalRecord = MedicalRecord::where('user_id', $userId)->first();
-        $age = Carbon::parse($user->date_of_birth)->diffByYear(Carbon::now());
+        $age = Carbon::parse($user->date_of_birth)->diffInYears(Carbon::now());
 
         $this->initialMessage = [
             [
@@ -46,6 +46,7 @@ class Chatbot
                 - You don't have to give any advice to non-medical-related questions.\
                 - Based on this data, you will give personalized health consultation: the user's age is $age, gender is $user->gender,  weight is $medicalRecord->weight kg and height is $medicalRecord->height cm. \n
                 - User allergies are : $medicalRecord->allergies.\n
+                - User blood type is : $medicalRecord->blood_type.\n
                 - Demonstrate humility by acknowledging your limitations and uncertainties.\n
                 - Be cheerful and give positive vibes to the users.\n
                 - You must answer in Bahasa Indonesia."
@@ -59,19 +60,19 @@ class Chatbot
 
     public function sendRequest($message)
     {
-
-        //process message here before append it to payload
-
-        array_push($this->initialMessage, ...$message);
-
+        $messagePayload = [
+            ...$this->initialMessage,
+            $message,
+        ];
+        
         $response = $this->client->chat()->create([
             ...$this->config,
-            "messages" => [
-                ...$this->initialMessage,
-                // ...append message here
-            ],
+            "messages" => $messagePayload,
         ]);
 
-        return $response;
+        return [
+            'payload' => $messagePayload,
+            'response' => $response,
+        ];
     }
 }

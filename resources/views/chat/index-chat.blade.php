@@ -31,21 +31,13 @@
         >
           <div class="flex flex-col h-full overflow-x-auto mb-4">
             <div class="flex flex-col h-full">
-              <div class="grid grid-cols-12 gap-y-2">
-                <div class="col-start-6 col-end-13 p-3 rounded-lg">
-                    <div class="flex items-center justify-start flex-row-reverse">
-                        <div class="relative mr-3 text-sm bg-background py-2 px-4 shadow rounded-xl text-white">
-                            <div>Kamu gapapa?</div>
-                        </div>
-                    </div>
-                </div>
-
+              <div id="chat-field" class="grid grid-cols-12 gap-y-2">
                 <div class="col-start-1 col-end-8 p-3 rounded-lg">
                   <div class="flex flex-row items-center">
                     <div
                       class="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
                     >
-                      <div>Aku gapapa kok</div>
+                      <div class="bot-message">{{$initialMessage[1]['content']}}</div>
                     </div>
                   </div>
                 </div>
@@ -60,12 +52,14 @@
               <div class="relative w-full">
                 <input
                   type="text"
+                  id="chatInput"
                   class="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
                 />
               </div>
             </div>
             <div class="ml-4">
               <button
+                id="sendButton"
                 class="flex items-center justify-center bg-primary hover:bg-darker rounded-xl text-white px-4 py-1 flex-shrink-0"
               >
                 <span>Kirim</span>
@@ -92,4 +86,84 @@
       </div>
     </div>
   </div>
+@endsection
+
+@section('script')
+  <script>
+
+    $(document).ready(function() {
+      function sendChatMessage(message) {
+
+          $.ajax({
+              url: '/users/8/chats',
+              type: 'POST',
+              data: {
+                  message: message,
+                  _token: '{{ csrf_token() }}'
+              },
+              success: function(response) {
+    
+                $('.loading').remove();
+                $('#chat-field').append(
+                  `<div class="col-start-1 col-end-8 p-3 rounded-lg">
+                  <div class="flex flex-row items-center">
+                    <div
+                      class="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
+                    >
+                      <div class="bot-message">${response.answer.content.replace('\n', '<br>')}</div>
+                    </div>
+                  </div>
+                </div>`
+                );
+              },
+              error: function(xhr, status, error) {
+                  // Handle errors
+                  console.error("Error occurred: " + status + "\nError: " + error);
+              }
+          });
+      }
+
+    // Function to display messages
+    function displayMessages(messages, className) {
+        // messages.forEach(function(message) {
+        //     var messageElement = $('<div></div>').addClass(className).text(message);
+        //     $('#messageContainer').append(messageElement); // Assuming there's a container for messages
+        // });
+    }
+
+    // Event handler for sending a message (e.g., when a button is clicked)
+    $('#sendButton').on('click', function() {
+        var message = $('#chatInput').val(); 
+
+        $('#chat-field').append(
+          `<div class=" col-start-6 col-end-13 p-3 rounded-lg">
+                <div class="flex items-center justify-start flex-row-reverse">
+                    <div class="relative mr-3 text-sm bg-background py-2 px-4 shadow rounded-xl text-white">
+                        <div class="user-message">${message}</div>
+                    </div>
+                </div>
+            </div>`
+        );
+
+        $('#chat-field').append(
+          `
+            <div class="loading col-start-1 col-end-8 p-3 rounded-lg">
+                  <div class="flex flex-row items-center">
+                    <div
+                      class="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
+                    >
+                      <div class="bot-message dot-loader"">
+                        <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            `
+        );
+        sendChatMessage(message);
+    });
+});
+  </script>
 @endsection

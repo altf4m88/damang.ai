@@ -9,29 +9,42 @@ class ChatController extends Controller
 {
     public function index($id)
     {
-        return view('chat.index-chat', ['user_id' => $id]);
+        $chatbot = new Chatbot($id);
+
+        $initialMessage = $chatbot->initialMessage;
+
+        return view('chat.index-chat', [
+            'user_id' => $id,
+            'initialMessage' => $initialMessage,
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $userId)
     {
+        $chat = $request->message;
 
-        // nanti di append sama pesan pesan sebelumnya, tar handle ma gw - fadhil
+        $chatbot = new Chatbot($userId);
 
-        // $chat = $request->chat;
-        // $user_id = $request->user_id;
+        $messages = [
+            'role' => 'user',
+            'content' => $chat,
+        ];
 
-        // $chatbot = new Chatbot($user_id);
+        $response = $chatbot->sendRequest($messages);
 
-        // $messages = [
-        //     [
-        //         'role' => 'user',
-        //         'content' => $chat
-        //     ],
-        // ];
+        $updateConsultation = [
+            ...$response['payload'],
+            [
+                ...$response['response']['choices'][0]['message'],
+            ]
+        ];
 
-        // $response = $chatbot->sendRequest($messages);
+        // update the consultation item
 
-        // return response()->json($response);
+        return response()->json([
+            'history' => $updateConsultation,
+            'answer' => $response['response']['choices'][0]['message']
+        ]);
     }
 
     public function show($id, $chat_id)
