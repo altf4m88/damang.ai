@@ -11,7 +11,7 @@ class ChatController extends Controller
 {
     public function index($id)
     {
-        $consultations = Consultation::all();
+        $consultations = Consultation::where('user_id', $id)->get();
 
         return view('chat.default-chat', compact('id', 'consultations'));
     }
@@ -19,7 +19,7 @@ class ChatController extends Controller
     public function detail($id, $chat_id)
     {
         $chatbot = new Chatbot($id);
-        $consultations = Consultation::all();
+        $consultations = Consultation::where('user_id', $id)->get();
         $consultation = Consultation::find($chat_id);
 
          return view('chat.index-chat', [
