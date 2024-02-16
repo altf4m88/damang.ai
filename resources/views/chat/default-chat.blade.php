@@ -31,11 +31,14 @@
         >
           <img src="{{ asset('images/empty-chat.png') }}" class="w-[335px] h-[325px]"/>
           <p>Tingkatkan kesehatan Anda dengan berkonsultasi melalui Damang AI!</p>
-          <button
-          class="bg-primary rounded-xl py-2 px-4 hover:bg-darker text-sm font-semibold text-white"
-        >
-          Konsultasi Sekarang
-        </button>
+          <form action="{{ route('store.consultation.chat', $id) }}" method="POST">
+            @csrf
+            <button
+              class="bg-primary rounded-xl py-2 px-4 hover:bg-darker text-sm font-semibold text-white"
+            >
+              Konsultasi Sekarang
+            </button>
+          </form>
         </div>
       </div>
     </div>
