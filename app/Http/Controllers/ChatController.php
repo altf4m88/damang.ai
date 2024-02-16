@@ -21,20 +21,30 @@ class ChatController extends Controller
 
     public function store(Request $request, $userId)
     {
-        $chat = $request->chat;
+        $chat = $request->message;
 
         $chatbot = new Chatbot($userId);
 
         $messages = [
-            [
-                'role' => 'user',
-                'content' => $chat
-            ],
+            'role' => 'user',
+            'content' => $chat,
         ];
 
         $response = $chatbot->sendRequest($messages);
 
-        return response()->json($response);
+        $updateConsultation = [
+            ...$response['payload'],
+            [
+                ...$response['response']['choices'][0]['message'],
+            ]
+        ];
+
+        // update the consultation item
+
+        return response()->json([
+            'history' => $updateConsultation,
+            'answer' => $response['response']['choices'][0]['message']
+        ]);
     }
 
     public function show($id, $chat_id)

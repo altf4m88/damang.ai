@@ -31,21 +31,13 @@
         >
           <div class="flex flex-col h-full overflow-x-auto mb-4">
             <div class="flex flex-col h-full">
-              <div class="grid grid-cols-12 gap-y-2">
-                <div class=" col-start-6 col-end-13 p-3 rounded-lg">
-                    <div class="flex items-center justify-start flex-row-reverse">
-                        <div class="relative mr-3 text-sm bg-background py-2 px-4 shadow rounded-xl text-white">
-                            <div class="bot-message">Kamu gapapa?</div>
-                        </div>
-                    </div>
-                </div>
-
+              <div id="chat-field" class="grid grid-cols-12 gap-y-2">
                 <div class="col-start-1 col-end-8 p-3 rounded-lg">
                   <div class="flex flex-row items-center">
                     <div
                       class="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
                     >
-                      <div class="user-message">Aku gapapa kok</div>
+                      <div class="bot-message">{{$initialMessage[1]['content']}}</div>
                     </div>
                   </div>
                 </div>
@@ -100,8 +92,7 @@
   <script>
 
     $(document).ready(function() {
-      function sendChatMessage() {
-          var message = $('#chatInput').val(); 
+      function sendChatMessage(message) {
 
           $.ajax({
               url: '/users/8/chats',
@@ -111,10 +102,19 @@
                   _token: '{{ csrf_token() }}'
               },
               success: function(response) {
-                console.log(response);
-                  // Assuming the server responds with a JSON containing arrays of bot and user messages
-                  // displayMessages(response.botMessages, 'bot-message');
-                  // displayMessages(response.userMessages, 'user-message');
+    
+                $('.loading').remove();
+                $('#chat-field').append(
+                  `<div class="col-start-1 col-end-8 p-3 rounded-lg">
+                  <div class="flex flex-row items-center">
+                    <div
+                      class="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
+                    >
+                      <div class="bot-message">${response.answer.content.replace('\n', '<br>')}</div>
+                    </div>
+                  </div>
+                </div>`
+                );
               },
               error: function(xhr, status, error) {
                   // Handle errors
@@ -133,7 +133,36 @@
 
     // Event handler for sending a message (e.g., when a button is clicked)
     $('#sendButton').on('click', function() {
-        sendChatMessage();
+        var message = $('#chatInput').val(); 
+
+        $('#chat-field').append(
+          `<div class=" col-start-6 col-end-13 p-3 rounded-lg">
+                <div class="flex items-center justify-start flex-row-reverse">
+                    <div class="relative mr-3 text-sm bg-background py-2 px-4 shadow rounded-xl text-white">
+                        <div class="user-message">${message}</div>
+                    </div>
+                </div>
+            </div>`
+        );
+
+        $('#chat-field').append(
+          `
+            <div class="loading col-start-1 col-end-8 p-3 rounded-lg">
+                  <div class="flex flex-row items-center">
+                    <div
+                      class="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
+                    >
+                      <div class="bot-message dot-loader"">
+                        <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            `
+        );
+        sendChatMessage(message);
     });
 });
   </script>

@@ -60,19 +60,19 @@ class Chatbot
 
     public function sendRequest($message)
     {
-
-        //process message here before append it to payload
-
-        array_push($this->initialMessage, ...$message);
-
+        $messagePayload = [
+            ...$this->initialMessage,
+            $message,
+        ];
+        
         $response = $this->client->chat()->create([
             ...$this->config,
-            "messages" => [
-                ...$this->initialMessage,
-                // ...append message here
-            ],
+            "messages" => $messagePayload,
         ]);
 
-        return $response;
+        return [
+            'payload' => $messagePayload,
+            'response' => $response,
+        ];
     }
 }
