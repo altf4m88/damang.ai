@@ -21,7 +21,8 @@
                 extend: {
                   colors: {
                     primary: '#34cc9c',
-                    "primary-dark": '#1f7a5e'
+                    darker: '#2fb88c',
+                    background: '#48d1a6',
                   }
                 }
               }
