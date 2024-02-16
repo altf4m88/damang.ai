@@ -47,14 +47,16 @@ class ProfileController extends Controller
             'blood_type' => 'required|string',
         ]);
 
-        $payload = [
-            ...$request->except('_token', 'weight', 'height'),
-            "user_id" => $id,
-            "weight" => (double)$request->weight,
-            "height" => (double)$request->height
-        ];
+        $medicalRecord = new MedicalRecord();
+        $medicalRecord->user_id = (int)$id;
+        $medicalRecord->medical_condition = $request->medical_condition;
+        $medicalRecord->allergies = $request->allergies;
+        $medicalRecord->weight = (double)$request->weight;
+        $medicalRecord->height = (double)$request->height;
+        $medicalRecord->blood_type = $request->blood_type;
 
-        MedicalRecord::create($payload);
+        $medicalRecord->save();
+        // dd($payload);
 
         return redirect()->route('profile');
     }
